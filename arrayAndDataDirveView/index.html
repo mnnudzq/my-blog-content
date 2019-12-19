@@ -18,13 +18,15 @@
     <h2 class="text-center">豆瓣电影排行榜</h2>
     <div class="search-bar">
         <div class="row">
-            <div class="col-sm-8">
+            <div class="col-sm-3">
                 <label>筛选：</label>
                 <select>
                     <option selected="selected">全部</option>
                     <option>已收藏</option>
                     <option>未收藏</option>
                 </select>
+            </div>
+            <div class="col-sm-3">
                 <label>排序：</label>
                 <select>
                     <option selected="selected">默认</option>
@@ -32,28 +34,28 @@
                     <option>评分从低到高</option>
                 </select>
             </div>
-            <div class="col-sm-4">
+            <div class="col-sm-6">
                 <button class="btn btn-default pull-right" id="delAllBtn">删除</button>
                 <button class="btn btn-default pull-right" id="addBtn">新增</button>
             </div>
         </div>
     </div>
-    <table class="table table-striped table-bordered">
+    <table class="table table-bordered">
         <thead>
         <tr>
-            <th style="width:5%; text-align: center;">
+            <th style="width:5%;">
                 <input type="checkbox" id="checkAll">
             </th>
-            <th style="width:35%; text-align: center;">
+            <th style="width:35%;">
                 电影名称
             </th>
-            <th style="width:15%; text-align: center;">
+            <th style="width:15%;">
                 评分
             </th>
-            <th style="width:20%; text-align: center;">
+            <th style="width:20%;">
                 是否收藏
             </th>
-            <th style="width:25%; text-align: center;">
+            <th style="width:25%;">
                 操作
             </th>
         </tr>
@@ -68,6 +70,24 @@
 
 <script>
     // 勇敢的心 8.9; 黑客帝国 9.0; 指环王3：王者无敌 9.2;
+    // 获取tbody元素
+    let tbody = document.querySelector("tbody");
+    // 声明渲染函数，提高复用性
+    let renderFn = () => {
+        // 将map返回的数组拼接后插入tbody元素中
+        tbody.innerHTML = data.map(item => `<tr>
+            <td><input type="checkbox"></td>
+            <td>${item.name}</td>
+            <td>${item.score}</td>
+            <td>${item.collect ? '已收藏' : '未收藏'}</td>
+            <td>
+                <button class="btn btn-default collect">${item.collect ? '取消收藏' : '收藏'}</button>
+                <button class="btn btn-default del">删除</button>
+            </td>
+        </tr>`).join('');
+    };
+    // 调用渲染方法
+    renderFn();
 </script>
 </body>
 </html>
