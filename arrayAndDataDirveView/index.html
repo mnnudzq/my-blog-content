@@ -20,18 +20,18 @@
         <div class="row">
             <div class="col-sm-3">
                 <label>筛选：</label>
-                <select>
-                    <option selected="selected">全部</option>
-                    <option>已收藏</option>
-                    <option>未收藏</option>
+                <select id="filter">
+                    <option selected="selected" value="0">全部</option>
+                    <option value="1">已收藏</option>
+                    <option value="2">未收藏</option>
                 </select>
             </div>
             <div class="col-sm-3">
                 <label>排序：</label>
-                <select>
-                    <option selected="selected">默认</option>
-                    <option>评分从高到低</option>
-                    <option>评分从低到高</option>
+                <select id="sort">
+                    <option selected="selected" value="0">默认</option>
+                    <option value="1">评分从高到低</option>
+                    <option value="2">评分从低到高</option>
                 </select>
             </div>
             <div class="col-sm-6">
@@ -70,12 +70,33 @@
 
 <script>
     // 勇敢的心 8.9; 黑客帝国 9.0; 指环王3：王者无敌 9.2;
+
+    // 获取对应元素
+    let filterEl = document.querySelector("#filter"),
+        sortEl   = document.querySelector("#sort");
+
+    // 设置过滤状态和排序状态对应方法
+    let filterFn = {
+        "0": () => true,
+        "1": (item) => item.collect,
+        "2": (item) => !item.collect
+    }, sortFn = {
+        "0": () => true,
+        "1": (item1, item2) => item2.score - item1.score,
+        "2": (item1, item2) => item1.score - item2.score
+    };
+
     // 获取tbody元素
     let tbody = document.querySelector("tbody");
     // 声明渲染函数，提高复用性
     let renderFn = () => {
+        // 获取过滤状态和排序状态
+        let filterState = filterEl.value,
+            sortState   = sortEl.value;
+        // 过滤排序
+        let showData = data.filter(filterFn[filterState]).sort(sortFn[sortState]);
         // 将map返回的数组拼接后插入tbody元素中
-        tbody.innerHTML = data.map(item => `<tr>
+        tbody.innerHTML = showData.map(item => `<tr>
             <td><input type="checkbox"></td>
             <td>${item.name}</td>
             <td>${item.score}</td>
@@ -88,6 +109,10 @@
     };
     // 调用渲染方法
     renderFn();
+
+    // 为过滤和排序添加change事件
+    filterEl.addEventListener('change', renderFn);
+    sortEl.addEventListener('change', renderFn);
 </script>
 </body>
 </html>
